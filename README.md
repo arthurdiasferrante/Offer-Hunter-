@@ -49,8 +49,10 @@ If nothing matches, it returns `Nenhuma vaga encontrada`.
 3. Install dependencies:
 
    ```bash
-   pip install pyTelegramBotAPI python-dotenv requests beautifulsoup4
+   pip install -r requirements.txt
    ```
+
+   `requirements.txt` contains pinned versions used by the project.
 
 4. Create a `.env` file in the project root (do not commit this file):
 
