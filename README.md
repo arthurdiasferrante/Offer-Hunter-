@@ -54,7 +54,7 @@ Early-stage Telegram bot in Python. Planned evolution: AI-assisted job discovery
 ## Run
 
 ```bash
-python teste_bot.py
+python offerhunterbot.py
 ```
 
 The bot uses long polling (`infinity_polling()`); keep the process running while you want the bot online.

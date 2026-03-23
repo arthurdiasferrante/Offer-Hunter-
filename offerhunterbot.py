@@ -14,11 +14,10 @@ def greetings(message):
     name = html.escape(message.from_user.first_name or "there")
     welcome = (
         f"Hey {name}! 👋\n\n"
-        "I'm your <b>job-scout bot</b> — still bootstrapping, but here's the plan:\n"
+        "I'm your <b>job-scout bot</b> still bootstrapping, but here's the plan:\n"
         "track openings with AI, bundle them up, and ping you with "
         "<b>clean, formatted digests</b> so you skip the noise.\n\n"
-        "Try typing <code>vagas</code> for a quick teaser.\n\n"
-        "Glad you tapped Start. Let's build something useful. 🚀"
+        "Try typing <code>vagas</code> for a quick teaser."
     )
     bot.reply_to(message, welcome, parse_mode="HTML")
 
@@ -33,7 +32,7 @@ def listener(message):
     print(f"[LOG] {user_name} (ID: {id_user}): (ENVIOU: {original_text})")
 
     if str(id_user) != ADMIN_ID:
-        alert = f"Alerta de Uso*\n👤 Usuário: {user_name} \n Mensagem: {original_text}"
+        alert = f"*Alerta de Uso*\n👤 Usuário: {user_name} \n Mensagem: {original_text}"
         bot.send_message(ADMIN_ID, alert, parse_mode="Markdown")
 
     match text:
