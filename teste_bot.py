@@ -1,4 +1,4 @@
-import requests
+import html
 import os
 from dotenv import load_dotenv
 import telebot
@@ -10,8 +10,17 @@ ADMIN_ID = os.getenv("ADMIN_ID")
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
-def greetings (message):
-    bot.reply_to(message, "Sistema online")
+def greetings(message):
+    name = html.escape(message.from_user.first_name or "there")
+    welcome = (
+        f"Hey {name}! 👋\n\n"
+        "I'm your <b>job-scout bot</b> — still bootstrapping, but here's the plan:\n"
+        "track openings with AI, bundle them up, and ping you with "
+        "<b>clean, formatted digests</b> so you skip the noise.\n\n"
+        "Try typing <code>vagas</code> for a quick teaser.\n\n"
+        "Glad you tapped Start. Let's build something useful. 🚀"
+    )
+    bot.reply_to(message, welcome, parse_mode="HTML")
 
 @bot.message_handler(func=lambda message: True)
 def listener(message):
@@ -28,8 +37,6 @@ def listener(message):
         bot.send_message(ADMIN_ID, alert, parse_mode="Markdown")
 
     match text:
-        case "banana":
-            bot.reply_to(message, "oi banana")
         case "vagas":
             bot.reply_to(message, "Sem vagas")
         case _:
