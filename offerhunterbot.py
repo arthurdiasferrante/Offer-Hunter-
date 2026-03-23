@@ -2,12 +2,14 @@ import html
 import os
 from dotenv import load_dotenv
 import telebot
+from scrapper import search_offers
 
 load_dotenv()
 
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_ID = os.getenv("ADMIN_ID")
 bot = telebot.TeleBot(TOKEN)
+
 
 @bot.message_handler(commands=['start'])
 def greetings(message):
@@ -37,7 +39,9 @@ def listener(message):
 
     match text:
         case "vagas":
-            bot.reply_to(message, "Sem vagas")
+            bot.reply_to(message, "Iniciando busca de vagas... ")
+            result = search_offers()
+            bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
         case _:
             bot.reply_to(message, "Comando não identificado")
 

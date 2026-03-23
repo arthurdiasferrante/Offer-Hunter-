@@ -1,33 +1,43 @@
 # Offer Hunter
 
-Early-stage Telegram bot in Python. Planned evolution: AI-assisted job discovery, aggregation, and formatted vacancy digests delivered to you.
+Telegram bot in Python focused on job hunting automation.  
+Today it scrapes a demo jobs page and sends filtered results to Telegram.  
+The long-term goal is to evolve into an AI-assisted job discovery and formatting assistant.
 
 ---
 
-## Current features
+## What it does today
 
-- `/start` command — welcome message in English (personalized, HTML formatting).
-- Every other message is logged to the console.
-- If the sender is **not** the configured administrator, the bot sends an **alert** to the admin with the user’s name and message text.
-- Sample keywords (input is lowercased with `lower()`):
-  - `vagas` → fixed reply (*Sem vagas*)
-  - anything else → *Comando não identificado*
+- Handles `/start` with a welcome message.
+- Logs incoming messages in the terminal.
+- Sends a usage alert to the admin when a non-admin user interacts with the bot.
+- Supports command-like keyword handling:
+  - `vagas` -> starts a scraping search and returns formatted job results.
+  - anything else -> `Comando não identificado`.
 
-## Roadmap
+## How `vagas` works
 
-- Plug in job sources (APIs, feeds, etc., respecting each provider’s terms).
-- Use AI to extract and normalize fields (company, role, location, link, deadline).
-- Deliver **one channel** of **clean, formatted** digests instead of raw noise.
+When the user sends `vagas`, the bot:
+
+1. Scrapes jobs from `https://realpython.github.io/fake-jobs`.
+2. Filters titles by keywords: `Dev`, `Programmer`, `Cybersecurity`, `System`.
+3. Formats matches in HTML and sends them back in Telegram with clickable links.
+
+If nothing matches, it returns `Nenhuma vaga encontrada`.
+
+## Project structure
+
+- `offerhunterbot.py` -> Telegram bot handlers, admin alerts, polling loop.
+- `scrapper.py` -> scraping and filtering logic (`search_offers()`).
 
 ## Requirements
 
-- Python 3.10+ (the code uses `match` / `case`).
-- A [BotFather](https://t.me/BotFather) token for your bot.
+- Python 3.10+ (the bot uses `match` / `case`).
+- A Telegram bot token from [BotFather](https://t.me/BotFather).
 
 ## Setup
 
-1. Clone the repository and `cd` into the project folder.
-
+1. Clone the repository and enter the project folder.
 2. Create and activate a virtual environment (recommended):
 
    ```bash
@@ -39,17 +49,17 @@ Early-stage Telegram bot in Python. Planned evolution: AI-assisted job discovery
 3. Install dependencies:
 
    ```bash
-   pip install pyTelegramBotAPI python-dotenv
+   pip install pyTelegramBotAPI python-dotenv requests beautifulsoup4
    ```
 
-4. Create a `.env` file in the project root **(do not commit this file)**:
+4. Create a `.env` file in the project root (do not commit this file):
 
    ```env
    TELEGRAM_TOKEN=your_botfather_token
    ADMIN_ID=your_numeric_chat_id
    ```
 
-   `ADMIN_ID` is the admin’s numeric Telegram user ID (same shape as `message.chat.id`). Only that user is skipped for “usage alert” messages when talking to the bot.
+`ADMIN_ID` must be your numeric Telegram user/chat ID (same format used by `message.chat.id`).
 
 ## Run
 
@@ -57,11 +67,17 @@ Early-stage Telegram bot in Python. Planned evolution: AI-assisted job discovery
 python offerhunterbot.py
 ```
 
-The bot uses long polling (`infinity_polling()`); keep the process running while you want the bot online.
+The bot uses long polling (`infinity_polling()`), so keep the process running while the bot is online.
+
+## Roadmap
+
+- Add more real job sources (APIs and/or compliant scraping targets).
+- Improve filters by skills, role type, location, and seniority.
+- Introduce AI-powered ranking and cleaner digest formatting.
 
 ## Security
 
-- Never commit `.env` or tokens to Git.
-- If a token leaks, revoke it in BotFather and issue a new one.
+- Never commit `.env` or bot tokens.
+- If a token leaks, revoke and regenerate it in BotFather.
 
 
