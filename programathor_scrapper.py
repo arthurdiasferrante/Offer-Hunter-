@@ -11,10 +11,22 @@ def search_offers_programathor():
 
     print(f"Testando acesso ao site: {url} ...")
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.Timeout:
+        return "⏱️ Timeout ao acessar Programathor. Tente novamente em instantes."
+    except requests.exceptions.HTTPError as e:
+        return f"⚠️ Erro HTTP ao buscar vagas: {e.response.status_code}"
+    except requests.exceptions.RequestException:
+        return "⚠️ Não foi possível acessar Programathor agora. Tente novamente mais tarde."
+
     soup = BeautifulSoup(response.text, "html.parser")
 
     offer_box = soup.find_all("div", class_="cell-list")
+    if not offer_box:
+        return "⚠️ A estrutura da página mudou. Tente novamente mais tarde."
+
     requires = ["Estágio", "Internship", "Júnior", "Estagiário"]
 
     offer_lists = []
@@ -39,6 +51,9 @@ def search_offers_programathor():
 
         if title_element and link_element:
             title = title_element.text.strip()
+            href = link_element.get("href") if link_element else None
+            if not href:
+                continue
             link = "https://programathor.com.br" + link_element["href"]
 
             valid_location = False

@@ -41,7 +41,11 @@ def listener(message):
     match text:
         case "programathor":
             bot.reply_to(message, "Iniciando busca de vagas em programathor...")
-            result = search_offers_programathor()
+            try:
+                result = search_offers_programathor()
+            except Exception:
+                result = "⚠️ Erro interno ao processar a busca. Tente novamente."
+                
             bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
         case _:
             bot.reply_to(message, "Comando não identificado")
