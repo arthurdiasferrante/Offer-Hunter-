@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import telebot
 from scrapper import search_offers
+from programathor_scrapper import search_offers_programathor
 
 load_dotenv()
 
@@ -38,7 +39,11 @@ def listener(message):
         bot.send_message(ADMIN_ID, alert, parse_mode="Markdown")
 
     match text:
-        case "vagas":
+        case "programathor":
+            bot.reply_to(message, "Iniciando busca de vagas em programathor...")
+            result = search_offers_programathor()
+            bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
+        case "vagas teste":
             bot.reply_to(message, "Iniciando busca de vagas... ")
             result = search_offers()
             bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)

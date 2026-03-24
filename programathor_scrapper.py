@@ -2,8 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def try_access():
-    url = "https://programathor.com.br/jobs/page/1454"
+def search_offers_programathor():
+    url = "https://programathor.com.br/jobs"
 
     headers = {
         "User-agent": "Mozilla/5.0 (Windows NT10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0 Safari/537.36"
@@ -54,12 +54,14 @@ def try_access():
 
 
     if len(offer_lists) == 0:
-        print("Sem vagas aqui")
-        return
-    print(f"Vagas encontradas ao todo: {len(offer_lists)}")
+        return "❌ Nenhuma vaga encontrada com esses filtros no momento"
 
-    for vaga in offer_lists:
-        print(f"Vaga: {vaga['title']} | Local: {vaga['location']}\n Link: {vaga['link']}")
+    final_text = f"🎯 Vagas encontradas ao todo: {len(offer_lists)}\n\n"
 
+    offers_text = []
+    for offer in offer_lists:
+        offer_str = f"📌 Vaga: {offer['title']} | 📍 Local: {offer['location']}\n🔗 Acesse: {offer['link']}"
+        offers_text.append(offer_str)
 
-try_access()
+    offers_found = "\n\n".join(offers_text)
+    return final_text + offers_found
