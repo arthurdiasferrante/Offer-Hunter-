@@ -1,7 +1,7 @@
 # Offer Hunter
 
 Telegram bot in Python focused on job hunting automation.  
-Today it scrapes a demo jobs page and sends filtered results to Telegram.  
+Today it scrapes Programathor jobs and sends filtered results to Telegram.  
 The long-term goal is to evolve into an AI-assisted job discovery and formatting assistant.
 
 ---
@@ -12,23 +12,25 @@ The long-term goal is to evolve into an AI-assisted job discovery and formatting
 - Logs incoming messages in the terminal.
 - Sends a usage alert to the admin when a non-admin user interacts with the bot.
 - Supports command-like keyword handling:
-  - `vagas` -> starts a scraping search and returns formatted job results.
+  - `programathor` -> starts a scraping search and returns formatted job results.
   - anything else -> `Comando não identificado`.
 
-## How `vagas` works
+## How `programathor` works
 
-When the user sends `vagas`, the bot:
+When the user sends `programathor`, the bot:
 
-1. Scrapes jobs from `https://realpython.github.io/fake-jobs`.
-2. Filters titles by keywords: `Dev`, `Programmer`, `Cybersecurity`, `System`.
-3. Formats matches in HTML and sends them back in Telegram with clickable links.
+1. Scrapes jobs from `https://programathor.com.br/jobs`.
+2. Stops scanning when it reaches expired jobs (`color-gray` marker in title block).
+3. Filters by location.
+4. Formats matches as a Telegram message with title, location, and link.
 
-If nothing matches, it returns `Nenhuma vaga encontrada`.
+If nothing matches, it returns `❌ Nenhuma vaga encontrada com esses filtros no momento`.
 
 ## Project structure
 
 - `offerhunterbot.py` -> Telegram bot handlers, admin alerts, polling loop.
-- `scrapper.py` -> scraping and filtering logic (`search_offers()`).
+- `programathor_scrapper.py` -> Programathor scraping and filtering logic (`search_offers_programathor()`).
+- `scrapper.py` -> legacy/experimental scraper module.
 
 ## Requirements
 

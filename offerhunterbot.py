@@ -43,10 +43,6 @@ def listener(message):
             bot.reply_to(message, "Iniciando busca de vagas em programathor...")
             result = search_offers_programathor()
             bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
-        case "vagas teste":
-            bot.reply_to(message, "Iniciando busca de vagas... ")
-            result = search_offers()
-            bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
         case _:
             bot.reply_to(message, "Comando não identificado")
 
