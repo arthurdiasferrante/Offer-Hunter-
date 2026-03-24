@@ -1,9 +1,11 @@
 import html
 import os
+import time
+
 from dotenv import load_dotenv
 import telebot
 from scrapper import search_offers
-from programathor_scrapper import search_offers_programathor
+from programathor_scrapper import set_page_range
 
 load_dotenv()
 
@@ -45,13 +47,30 @@ def help_command(message):
 # Procura vagas no site "Programathor.com"
 @bot.message_handler(commands=['programathor'])
 def programathor_command(message):
-    bot.reply_to(message, "Iniciando busca de vagas em programathor...")
-    try:
-        result = search_offers_programathor()
-    except Exception:
-        result = "⚠️ Erro interno ao processar a busca. Tente novamente."
-    bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
+    msg = bot.reply_to(message, "De qual a qual página você quer ir? (Ex: 1-5)")
+    bot.register_next_step_handler(msg, process_page_range)
 
+def process_page_range(message):
+    user_text = message.text
+
+    try:
+        parts = user_text.split("-")
+        initial_page = int(parts[0].strip())
+        last_page = int(parts[1].strip())
+
+        bot.reply_to(message, f"Iniciando busca de {initial_page} até {last_page}")
+
+        result = set_page_range(initial_page, last_page)
+
+        if isinstance(result, list):
+            for pacote in result:
+                bot.reply_to(message, pacote, parse_mode="HTML", disable_web_page_preview=True)
+                time.sleep(1)
+        elif result:
+            bot.reply_to(message, result, parse_mode="HTML", disable_web_page_preview=True)
+
+    except (ValueError, IndexError):
+        bot.reply_to(message, "⚠️ Formato inválido. O processo foi cancelado. Digite programathor novamente e use o formato '1-5'.")
 
 # Lida com mensagens soltas (sem slash /)
 @bot.message_handler(func=lambda message: True)
